@@ -16,6 +16,7 @@ import {
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { PRODUCTS, CATEGORIES } from '../../data/products';
+import aarikaLogo from '../../assets/aarika-logo.png';
 
 const Navbar = () => {
   const { totalCount, subtotal } = useCart();
@@ -120,11 +121,11 @@ const Navbar = () => {
   className="brand-logo"
   aria-label="Aarika Jewellery Home"
 >
-  <img
-    src="/src/assets/aarika-logo.png"
-    alt="Aarika Jewellery"
-    className="brand-logo-image"
-  />
+<img
+  src={aarikaLogo}
+  alt="Aarika Jewellery"
+  className="brand-logo-image"
+/>
 </Link>
 
           {/* Desktop Navigation Links */}

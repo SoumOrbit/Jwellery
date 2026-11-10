@@ -64,7 +64,7 @@ const CategoryGrid = () => {
       <div className="container">
         <div className="section-header text-center">
           <span className="section-subtitle">
-            <Sparkles size={14} className="inline-icon" /> Curated Collections
+             Curated Collections
           </span>
           <h2 className="section-title">Explore By Category</h2>
           <p className="section-desc">
