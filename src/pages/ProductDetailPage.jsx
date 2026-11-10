@@ -50,7 +50,7 @@ const ProductDetailPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (product) {
-      setSelectedMetal(product.defaultMetal || product.metals[0]);
+      setSelectedMetal(product.defaultMetal || product.metals?.[0] || '18K Gold');
       setSelectedSize(product.sizes ? product.sizes[0] : 'Standard');
       setActiveImgIndex(0);
       setQuantity(1);
@@ -226,24 +226,12 @@ const ProductDetailPage = () => {
 
             <p className="detail-description">{product.description}</p>
 
-            {/* Metal Selection */}
-            {product.metals && product.metals.length > 0 && (
+            {/* Single Metal Type Display */}
+            {selectedMetal && (
               <div className="detail-choice-block">
                 <div className="choice-label-row">
                   <label className="choice-label">Precious Metal:</label>
-                  <span className="choice-active-val">{selectedMetal}</span>
-                </div>
-                <div className="metal-options-list">
-                  {product.metals.map((metal) => (
-                    <button
-                      key={metal}
-                      className={`metal-choice-btn ${selectedMetal === metal ? 'selected' : ''}`}
-                      onClick={() => setSelectedMetal(metal)}
-                    >
-                      <span className={`swatch-circle swatch-${metal.toLowerCase().replace(/\s+/g, '-')}`}></span>
-                      <span>{metal}</span>
-                    </button>
-                  ))}
+                  <span className="choice-active-val single-metal-badge">{selectedMetal}</span>
                 </div>
               </div>
             )}

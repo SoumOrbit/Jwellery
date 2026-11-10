@@ -101,45 +101,7 @@ const HeroBanner = () => {
           </button>
         </div>
       </div>
-
-      {/* Trust Highlights Bar */}
-      <div className="hero-features-bar">
-        <div className="container">
-          <div className="features-strip">
-            <div className="feature-strip-item">
-              <Gem size={20} className="strip-icon" />
-              <div>
-                <strong className="strip-title">100% Conflict-Free</strong>
-                <span className="strip-desc">GIA &amp; IGI Certified Gems</span>
-              </div>
-            </div>
-
-            <div className="feature-strip-item">
-              <Award size={20} className="strip-icon" />
-              <div>
-                <strong className="strip-title">18K Solid Gold &amp; Platinum</strong>
-                <span className="strip-desc">Never plated, purely hallmarked</span>
-              </div>
-            </div>
-
-            <div className="feature-strip-item">
-              <Shield size={20} className="strip-icon" />
-              <div>
-                <strong className="strip-title">Lifetime Atelier Warranty</strong>
-                <span className="strip-desc">Complimentary prong &amp; polish care</span>
-              </div>
-            </div>
-
-            <div className="feature-strip-item">
-              <Sparkles size={20} className="strip-icon" />
-              <div>
-                <strong className="strip-title">Bespoke Custom Orders</strong>
-                <span className="strip-desc">One-on-one master jeweler design</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </section>
   );
 };

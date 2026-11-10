@@ -1,9 +1,21 @@
 // Lumière Haute Joaillerie - MySQL REST API Client Service
 // Connects React frontend to XAMPP PHP/MySQL backend
 
-const API_BASE_URL = window.location.hostname === 'localhost' && window.location.port !== '' && window.location.port !== '80'
-  ? 'http://localhost/Jwellery/api'
-  : './api';
+const getApiBaseUrl = () => {
+  if (typeof window === 'undefined') return 'http://localhost/Jwellery/api';
+  const { hostname, port, pathname } = window.location;
+  // If running on Vite dev server (port 5173, 5174, etc.)
+  if (port && port !== '80' && port !== '443') {
+    return `http://${hostname || 'localhost'}/Jwellery/api`;
+  }
+  // If running on Apache directly
+  if (pathname.includes('/Jwellery')) {
+    return '/Jwellery/api';
+  }
+  return '/Jwellery/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 const fetchWithTimeout = async (url, options = {}, timeoutMs = 4000) => {
   const controller = new AbortController();

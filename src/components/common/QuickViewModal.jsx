@@ -9,7 +9,7 @@ const QuickViewModal = ({ product, onClose }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
-  const [selectedMetal, setSelectedMetal] = useState(product?.defaultMetal || product?.metals[0]);
+  const [selectedMetal, setSelectedMetal] = useState(product?.defaultMetal || product?.metals?.[0] || '18K Gold');
   const [selectedSize, setSelectedSize] = useState(product?.sizes ? product.sizes[0] : 'Standard');
   const [quantity, setQuantity] = useState(1);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
@@ -74,21 +74,10 @@ const QuickViewModal = ({ product, onClose }) => {
 
             <p className="qv-desc">{product.shortDesc}</p>
 
-            {/* Metal Selection */}
-            {product.metals && (
+            {/* Single Metal Specification */}
+            {selectedMetal && (
               <div className="qv-option-group">
-                <label className="qv-option-label">Metal: <strong>{selectedMetal}</strong></label>
-                <div className="qv-metal-pills">
-                  {product.metals.map((m) => (
-                    <button
-                      key={m}
-                      className={`qv-metal-pill ${selectedMetal === m ? 'selected' : ''}`}
-                      onClick={() => setSelectedMetal(m)}
-                    >
-                      {m}
-                    </button>
-                  ))}
-                </div>
+                <label className="qv-option-label">Precious Metal: <strong className="text-gold">{selectedMetal}</strong></label>
               </div>
             )}
 

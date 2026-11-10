@@ -281,8 +281,15 @@ export const AdminProvider = ({ children }) => {
     const updatedList = resequenceProducts([...productsList, productWithId]);
     setProductsList(updatedList);
 
-    // Send to MySQL in background
-    api.addProduct(productWithId);
+    // Send to MySQL and sync with returned database records
+    try {
+      const res = await api.addProduct(productWithId);
+      if (res && res.success && Array.isArray(res.products) && res.products.length > 0) {
+        setProductsList(resequenceProducts(res.products));
+      }
+    } catch (err) {
+      console.warn('MySQL add product sync error, local state retained:', err);
+    }
 
     return productWithId;
   };
@@ -293,12 +300,19 @@ export const AdminProvider = ({ children }) => {
     api.updateProduct(id, updatedFields);
   };
 
-  const deleteProduct = (id) => {
+  const deleteProduct = async (id) => {
     // Delete and immediately resequence remaining products so IDs are 100% consecutive without gaps
     const remaining = productsList.filter(p => p.id !== id && p.serialNo !== id);
     const resequenced = resequenceProducts(remaining);
     setProductsList(resequenced);
-    api.deleteProduct(id);
+    try {
+      const res = await api.deleteProduct(id);
+      if (res && res.success && Array.isArray(res.products) && res.products.length > 0) {
+        setProductsList(resequenceProducts(res.products));
+      }
+    } catch (err) {
+      console.warn('MySQL delete product sync error, local state retained:', err);
+    }
   };
 
   const toggleStock = (id) => {

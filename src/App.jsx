@@ -20,6 +20,18 @@ import WishlistPage from './pages/WishlistPage';
 import AdminLoginPage from './pages/admin/AdminLoginPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 
+// Auto-detect direct non-hash navigation like /admin/login and redirect to hash equivalent
+if (typeof window !== 'undefined') {
+  const path = window.location.pathname;
+  if (path.endsWith('/admin/login') || path.endsWith('/admin/login/')) {
+    const basePath = path.replace(/\/admin\/login\/?$/, '');
+    window.location.replace(`${window.location.origin}${basePath}/#/admin/login`);
+  } else if (path.endsWith('/admin') || path.endsWith('/admin/')) {
+    const basePath = path.replace(/\/admin\/?$/, '');
+    window.location.replace(`${window.location.origin}${basePath}/#/admin`);
+  }
+}
+
 const AppLayout = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');

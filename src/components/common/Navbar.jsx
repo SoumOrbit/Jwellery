@@ -114,15 +114,18 @@ const Navbar = () => {
           </button>
 
           {/* Brand Logo */}
-          <Link to="/" className="brand-logo" aria-label="Lumière Haute Joaillerie Home">
-            <div className="logo-emblem">
-              <Diamond size={24} strokeWidth={1.8} className="gem-icon" />
-            </div>
-            <div className="logo-text-group">
-              <span className="brand-name">LUMIÈRE</span>
-              <span className="brand-tagline">HAUTE JOAILLERIE PARIS</span>
-            </div>
-          </Link>
+         {/* Brand Logo */}
+<Link
+  to="/"
+  className="brand-logo"
+  aria-label="Aarika Jewellery Home"
+>
+  <img
+    src="/src/assets/aarika-logo.png"
+    alt="Aarika Jewellery"
+    className="brand-logo-image"
+  />
+</Link>
 
           {/* Desktop Navigation Links */}
           <nav className="desktop-nav-links" aria-label="Primary Navigation">

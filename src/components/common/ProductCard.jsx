@@ -8,15 +8,13 @@ import StarRating from './StarRating';
 const ProductCard = ({ product, onQuickView }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const [selectedMetal, setSelectedMetal] = useState(product.defaultMetal || product.metals[0]);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const isFavorite = isInWishlist(product.id);
+  const isFavorite = isInWishlist ? isInWishlist(product.id) : false;
+  const metalType = product.defaultMetal || (product.metals && product.metals[0]) || '18K Gold';
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product, selectedMetal, product.sizes ? product.sizes[0] : null, 1);
+    addToCart(product, metalType, product.sizes ? product.sizes[0] : null, 1);
   };
 
   const handleWishlist = (e) => {
@@ -34,11 +32,7 @@ const ProductCard = ({ product, onQuickView }) => {
   };
 
   return (
-    <div 
-      className="product-card"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="product-card">
       <div className="product-media-wrap">
         <Link to={`/product/${product.id}`} className="product-image-link">
           <div className="product-thumb-wrapper">
@@ -95,24 +89,10 @@ const ProductCard = ({ product, onQuickView }) => {
           <Link to={`/product/${product.id}`}>{product.name}</Link>
         </h3>
 
-        {/* Metal Swatches */}
-        {product.metals && product.metals.length > 1 && (
-          <div className="card-metal-swatches">
-            {product.metals.map((metal) => (
-              <button
-                key={metal}
-                className={`metal-dot-btn ${selectedMetal === metal ? 'selected' : ''}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelectedMetal(metal);
-                }}
-                title={metal}
-                aria-label={`Select ${metal}`}
-              >
-                <span className={`swatch-circle swatch-${metal.toLowerCase().replace(/\s+/g, '-')}`}></span>
-              </button>
-            ))}
-            <span className="selected-metal-name">{selectedMetal}</span>
+        {/* Single Metal Type Badge */}
+        {metalType && (
+          <div className="card-metal-single">
+            <span className="metal-type-badge">{metalType}</span>
           </div>
         )}
 

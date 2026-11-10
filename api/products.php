@@ -7,7 +7,12 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 // Resequence all product IDs in MySQL so they are strictly consecutive: lum-01, lum-02, lum-03...
 function resequenceProductIds($pdo) {
     try {
-        $stmt = $pdo->query("SELECT id FROM `products` ORDER BY CAST(SUBSTRING(id, 5) AS UNSIGNED) ASC, `created_at` ASC");
+        $stmt = $pdo->query("SELECT id FROM `products` ORDER BY 
+            CASE 
+                WHEN id LIKE 'lum-%' THEN CAST(SUBSTRING(id, 5) AS UNSIGNED) 
+                ELSE 999999 
+            END ASC, 
+            `created_at` ASC");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (empty($rows)) return;
 
@@ -94,9 +99,15 @@ switch ($method) {
             exit();
         }
 
-        // Count existing to assign next consecutive ID
-        $count = (int)$pdo->query("SELECT COUNT(*) FROM `products`")->fetchColumn();
-        $id = !empty($data['id']) ? $data['id'] : 'lum-' . str_pad($count + 1, 2, '0', STR_PAD_LEFT);
+        // To prevent primary key conflicts, determine next safe ID
+        $maxSeq = 0;
+        $idStmt = $pdo->query("SELECT id FROM `products`");
+        while ($row = $idStmt->fetch(PDO::FETCH_ASSOC)) {
+            if (preg_match('/lum-(\d+)/', $row['id'], $m)) {
+                $maxSeq = max($maxSeq, (int)$m[1]);
+            }
+        }
+        $id = 'lum-' . str_pad($maxSeq + 1, 2, '0', STR_PAD_LEFT);
         
         $name = $data['name'];
         $category = $data['category'] ?? 'rings';
@@ -154,11 +165,20 @@ switch ($method) {
         // Resequence to ensure continuous 1, 2, 3... order
         resequenceProductIds($pdo);
 
+        // Fetch the fresh full list of products from DB to return to client
+        $fetchStmt = $pdo->query("SELECT * FROM `products` ORDER BY CAST(SUBSTRING(id, 5) AS UNSIGNED) ASC, `created_at` ASC");
+        $rows = $fetchStmt->fetchAll();
+        $products = [];
+        foreach ($rows as $idx => $r) {
+            $products[] = formatProduct($r, $idx);
+        }
+
         http_response_code(201);
         echo json_encode([
             'success' => true,
             'message' => 'Product published to catalog and consecutive IDs preserved',
-            'id' => $id
+            'id' => $id,
+            'products' => $products
         ]);
         break;
 
@@ -253,10 +273,19 @@ switch ($method) {
         // Automatically re-sequence all remaining products in MySQL consecutively: lum-01, lum-02, lum-03...
         resequenceProductIds($pdo);
 
+        // Fetch fresh product list
+        $fetchStmt = $pdo->query("SELECT * FROM `products` ORDER BY CAST(SUBSTRING(id, 5) AS UNSIGNED) ASC, `created_at` ASC");
+        $rows = $fetchStmt->fetchAll();
+        $products = [];
+        foreach ($rows as $idx => $r) {
+            $products[] = formatProduct($r, $idx);
+        }
+
         echo json_encode([
             'success' => true, 
             'message' => 'Product deleted successfully and IDs resequenced consecutively', 
-            'id' => $id
+            'id' => $id,
+            'products' => $products
         ]);
         break;
 

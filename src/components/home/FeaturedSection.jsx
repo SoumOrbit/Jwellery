@@ -216,7 +216,7 @@ const FeaturedSection = () => {
         {/* View All Button */}
         <div className="view-more-container text-center">
           <Link to="/shop" className="btn-outline-luxury">
-            <span>View All Creations ({PRODUCTS.length})</span>
+            <span>View All Creations ({(productsList && productsList.length > 0) ? productsList.length : PRODUCTS.length})</span>
             <ArrowRight size={18} />
           </Link>
         </div>

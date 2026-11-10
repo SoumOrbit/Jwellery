@@ -93,7 +93,8 @@ const ShopPage = () => {
 
       // Metal filter
       if (selectedMetals.length > 0) {
-        const hasMatchingMetal = item.metals.some(m => selectedMetals.includes(m));
+        const itemMetals = Array.isArray(item.metals) ? item.metals : [item.defaultMetal || item.metals || '18K Yellow Gold'];
+        const hasMatchingMetal = itemMetals.some(m => selectedMetals.includes(m));
         if (!hasMatchingMetal) return false;
       }
 
